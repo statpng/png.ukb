@@ -32,8 +32,7 @@
 \
 \
 \
-\
-\
+
 
 ## Data Import
 
@@ -53,8 +52,6 @@ path%_%filename%_%".tab"
 
 ---
 
-\
-\
 \
 \
 \
@@ -80,12 +77,12 @@ path%_%filename%_%".tab"
 
 ---
 
+\
+\
+\
+\
 
-\
-\
-\
-\
-\
+
 Looking at the variables in `ukb_data_dict` that have NA values for "Field ID". We suspect that the description for that variable has not yet been updated.
 ```{r}
 # Note
@@ -104,12 +101,11 @@ ukb_field %>% filter( field.showcase %in% MissingField )
 ---
 
 
+\
+\
+\
+\
 
-\
-\
-\
-\
-\
 To save the above data, we will use `purrr:map2` function as follows:
 ```{r}
 
@@ -140,12 +136,11 @@ if(FALSE){
 ---
 
 
+\
+\
+\
+\
 
-\
-\
-\
-\
-\
 You can load a dataset with specific variables in an efficient way using `read_ukb` based on the `data.table` package which handles large volumes of data efficiently.
 By filtering out only the variables of interest in `ukb_data_dict`, you can load a dataset consisting of only those variables.
 
@@ -178,7 +173,8 @@ if(FALSE){
 \
 \
 \
-\
+
+
 Additionally, you can load a dataset containing only two specific variables (`f.eid`, `f.31.0.0`) in the following way.
 ```{r}
 ukb_data <- data.table::fread( path%_%filename%_%".tab", nrows=1000, select=c("f.eid", "f.31.0.0"))
@@ -195,9 +191,7 @@ ukb_data <- data.table::fread( path%_%filename%_%".tab", nrows=1000, select=c("f
 \
 \
 \
-\
-\
-\
+
 ## Dividing Datasets Based on Path Categories
 
 We aim to categorize approximately 20,000 variables into subgroups using Path categories (`ukb_data_dict$Path`) to minimize data retrieval time. We want each dataset to contain a maximum of `N` variables.
@@ -222,7 +216,6 @@ Repeat the aforementioned process for all datasets containing `N` or fewer varia
 
 
 
-\
 \
 \
 \
@@ -271,8 +264,6 @@ Save a dataset for each category using `data.table::fwrite`.
 \
 \
 \
-\
-\
 ## Reduced dataset
 ```{r}
 if(FALSE){
@@ -300,7 +291,7 @@ Keep in mind that it's necessary to filter out `ukb_data_dict` to correspond wit
 \
 \
 \
-\
+
 You can see the argument of `ukb_data_dict` used to construct `ukb_data` by `attr(ukb_data, "argument")`.
 
 ```{r}
@@ -313,9 +304,6 @@ attr(ukb_data, "argument")
 ---
 
 
-
-\
-\
 \
 \
 \
