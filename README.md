@@ -4,41 +4,6 @@
 
 
 
----
-title: "png.UKB - Tutorial"
-author: "Kipoong Kim"
-
-# for pdf
-toc: true
-
-number-sections: true
-highlight-style: pygments
-
-format:
-  html:
-    code-fold: false
-    code-tools: true
-    code-link: true
-    code-line-numbers: true
-    
-    df-print: paged # default, kable, tibble, paged
-    
-    html-math-method: katex
-    
-    # for pdf
-    geometry: 
-      - top=30mm
-      - left=30mm
-    
-editor: visual
-execute:
-  echo: true
-  warning: false
-  include: true
-  message: false
-  cache: true
----
-
 
 
 
