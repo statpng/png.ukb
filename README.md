@@ -372,7 +372,7 @@ data.table::fwrite(ukb_data_dict_genetics, "ukb_data_dict_genetics.csv" )
 
 
 
-```
+```shell
 #!/bin/bash
 
 
