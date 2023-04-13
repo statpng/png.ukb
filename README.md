@@ -376,6 +376,28 @@ data.table::fwrite(ukb_data_dict_genetics, "ukb_data_dict_genetics.csv" )
 #!/bin/bash
 
 
+# Download Imputation Score
+
+## Note that you should have a directory "./QC/ukb_imp_mfi".
+
+for i in {1..22} X XY
+do
+    wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_mfi_chr${i}_v3.txt -P ./QC/ukb_imp_mfi
+done
+
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_snp_qc.txt
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_snp_bim.tar
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_imp_bgi.tgz
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_imp_mfi.tgz
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_hap_bgi.tgz
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_snp_posterior.tar
+# wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_snp_posterior.batch
+
+
+
+
+
+
 ## 1. Imputation Score
 # for i in {1..22}
 # do
