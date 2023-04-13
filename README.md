@@ -401,8 +401,15 @@ done
 ## 1. Imputation Score
 # for i in {1..22}
 # do
-#   awk -v chr=$i 'BEGIN {FS="\t"; OFS="\t"} NF==8 { print chr,$0,chr":"$3"_"$4"_"$5 }' ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt
+#   awk -v chr=$i 'BEGIN {FS="\t"; OFS="\t"} NF==8 && $8 != "" { print chr,$0,chr":"$3"_"$4"_"$5 }' ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt
 # done > ./QC/ukb_mfi_all_v3.tsv
+
+# In R
+# path <- "/Volumes/T7/2.UKB/Genetics/QC/ukb_imp_mfi"
+# out <- map(list.files(path, full.names = TRUE), ~ data.table::fread(.x) %>% filter( !is.na(V8) ))
+# data.table::fwrite( out %>% dplyr::bind_rows(), "/Volumes/T7/2.UKB/Genetics/QC/ukb_mfi_all_v3.tsv")
+
+
 
 
 ## 2. Format Convergion
