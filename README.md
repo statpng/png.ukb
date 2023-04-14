@@ -399,10 +399,10 @@ done
 
 
 ## 1. Imputation Score
-# for i in {1..22}
-# do
-#   awk -v chr=$i 'BEGIN {FS="\t"; OFS="\t"} NF==8 && $8 != "" { print chr,$0,chr":"$3"_"$4"_"$5 }' ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt
-# done > ./QC/ukb_mfi_all_v3.tsv
+ for i in {1..22}
+ do
+   awk -v chr=$i 'BEGIN {FS="\t"; OFS="\t"} NF==8 && $8 != "NA" { print chr,$0,chr":"$3"_"$4"_"$5 }' ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt
+ done > ./QC/ukb_mfi_all_v3.tsv
 
 # In R
 # path <- "/Volumes/T7/2.UKB/Genetics/QC/ukb_imp_mfi"
@@ -436,15 +436,28 @@ ukb22828_c${i}_b0_v3.afreq > exclrsIDs_c${i}_ambiguous.txt
 
 
 ## 4. Sample & SNP QC
+#  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
+#          --memory 20000 \
+#          --exclude exclrsIDs_c${i}_ambiguous.txt \
+#          --extract-col-cond ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt 8 1 \
+#          --extract-col-cond-min 0.4 \
+#          --maf 0.005 \
+#          --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
+#          --write-snplist --write-samples --make-pgen \
+#          --out ukb22828_c${i}_b0_v3_QC
+
+## 4. Sample & SNP QC
   ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
           --memory 20000 \
           --exclude exclrsIDs_c${i}_ambiguous.txt \
-          --extract-col-cond ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt 8 1 \
+          --extract-col-cond ./QC/ukb_mfi_all_v3.tsv 9 10 \
           --extract-col-cond-min 0.4 \
           --maf 0.005 \
           --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
           --write-snplist --write-samples --make-pgen \
           --out ukb22828_c${i}_b0_v3_QC
+
+
 
 done
 
