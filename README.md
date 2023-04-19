@@ -386,10 +386,10 @@ data.table::fwrite(ukb_data_dict_genetics, "ukb_data_dict_genetics.csv" )
 
 ## Note that you should have a directory "./QC/ukb_imp_mfi".
 
-for i in {1..22} X XY
-do
-    wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_mfi_chr${i}_v3.txt -P ./QC/ukb_imp_mfi
-done
+#for i in {1..22} X XY
+#do
+#    wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_mfi_chr${i}_v3.txt -P ./QC/ukb_imp_mfi
+#done
 
 # wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_snp_qc.txt
 # wget https://biobank.ctsu.ox.ac.uk/ukb/ukb/auxdata/ukb_snp_bim.tar
@@ -402,11 +402,11 @@ done
 
 
 # 1. Imputation Score
-for i in {1..22}
-# for i in 1 10 12 {14..19} 
-do
-  awk -v chr=$i 'BEGIN {FS="\t"; OFS="\t"} NF==8 && $8 != "NA" { print chr,$0,chr":"$3"_"$4"_"$5 }' ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.tsv
-done > ./QC/ukb_mfi_all_v3.tsv
+#for i in {1..22}
+## for i in 1 10 12 {14..19}
+#do
+#  awk -v chr=$i 'BEGIN {FS="\t"; OFS="\t"} NF==8 && $8 != "NA" { print chr,$0,chr":"$3"_"$4"_"$5 }' ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.tsv
+#done > ./QC/ukb_mfi_all_v3.tsv
 
 # In R
 # path <- "/Volumes/T7/2.UKB/Genetics/QC/ukb_imp_mfi"
@@ -421,19 +421,19 @@ done > ./QC/ukb_mfi_all_v3.tsv
 
 ## 2. Format Convergion
 for i in {1..22}
-# for i in 1 10 12 {14..19} 
+# for i in 1 10 12 {14..19}
 do
   echo "Running for chromosome $i"
 
   ~/plink2 --bgen ./bgen/ukb22828_c${i}_b0_v3.bgen ref-first \
-	   --hard-call-threshold 0.1 \
-	   --sample ./sample/ukb22828_c${i}_b0_v3_s4871*.sample \
-	   --memory 20000 \
-	   --set-all-var-ids @:\#_\$r_\$a \
-	   --new-id-max-allele-len 500 \
-	   --freq \
-	   --make-pgen \
-	   --out ukb22828_c${i}_b0_v3
+       --hard-call-threshold 0.1 \
+       --sample ./sample/ukb22828_c${i}_b0_v3_s4871*.sample \
+       --memory 20000 \
+       --set-all-var-ids @:\#_\$r_\$a \
+       --new-id-max-allele-len 500 \
+       --freq \
+       --make-pgen \
+       --out ukb22828_c${i}_b0_v3
 
 
 
@@ -448,64 +448,65 @@ ukb22828_c${i}_b0_v3.afreq > exclrsIDs_c${i}_ambiguous.txt
 
 ## 4. Sample & SNP QC
 #  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
-#	  --memory 20000 \
-#	  --exclude exclrsIDs_c${i}_ambiguous.txt \
-#	  --extract-col-cond ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.tsv 8 1 \
-#	  --extract-col-cond-min 0.4 \
-#	  --maf 0.005 \
-#	  --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
-#	  --write-snplist --write-samples --make-pgen \
-#	  --out ukb22828_c${i}_b0_v3_QC
+#      --memory 20000 \
+#      --exclude exclrsIDs_c${i}_ambiguous.txt \
+#      --extract-col-cond ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.tsv 8 1 \
+#      --extract-col-cond-min 0.4 \
+#      --maf 0.005 \
+#      --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
+#      --write-snplist --write-samples --make-pgen \
+#      --out ukb22828_c${i}_b0_v3_QC
 
-  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
-	  --memory 20000 \
-	  --exclude exclrsIDs_c${i}_ambiguous.txt \
-	  --extract-col-cond ./QC/ukb_mfi_all_v3.tsv 9 10 \
-	  --extract-col-cond-min 0.4 \
-	  --maf 0.005 \
-	  --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
-	  --write-snplist --write-samples --make-pgen \
-	  --out ukb22828_c${i}_b0_v3_QC
+#  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
+#      --memory 20000 \
+#      --exclude exclrsIDs_c${i}_ambiguous.txt \
+#      --extract-col-cond ./QC/ukb_mfi_all_v3.tsv 9 10 \
+#      --extract-col-cond-min 0.4 \
+#      --maf 0.005 \
+#      --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
+#      --write-snplist --write-samples --make-pgen \
+#      --out ukb22828_c${i}_b0_v3_QC
 
 
 
 ## 4. SNP QC: Imp. score + MAF + Used_in_PCA (call rate and etc.)
 
-#  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
-#	  --memory 20000 \
-#	  --exclude exclrsIDs_c${i}_ambiguous.txt \
-#	  --extract-col-cond ./QC/ukb_imp_mfi/ukb_mfi_chr${i}_v3.txt 8 1 --extract-col-cond-min 0.4 \
-#	  --maf 0.005 \
-#	  --write-snplist \
-#	  --make-pgen \
-#	  --out ukb22828_c${i}_b0_v3_snpQC
+  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
+      --memory 20000 \
+      --exclude exclrsIDs_c${i}_ambiguous.txt \
+      --extract-col-cond ./QC/ukb_mfi_all_v3.tsv 9 10 \
+	  --extract-col-cond-min 0.4 \
+      --maf 0.005 \
+      --write-snplist \
+      --make-pgen \
+      --out ukb22828_c${i}_b0_v3_snpQC
 
 
 ## 5. Sample QC: refer to png.ukb::png.ukb_QC
-#  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
-#	  --memory 20000 \
-#	  --extract ukb22828_c${i}_b0_v3_snpQC.snplist \
-#	  --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
-#	  --write-samples \
-#	  --out ukb22828_c${i}_b0_v3_sampleQC
+  ~/plink2  --pfile ukb22828_c${i}_b0_v3 \
+      --memory 20000 \
+      --extract ukb22828_c${i}_b0_v3_snpQC.snplist \
+      --keep-fam ./QC/ukb_data_genetics_AfterQC_eid.txt \
+      --write-samples \
+      --out ukb22828_c${i}_b0_v3_sampleQC
 
 
 
 ## Overall
 #  ~/plink2 --bgen ./bgen/ukb22828_c${i}_b0_v3.bgen ref-first \
-#	  --hard-call-threshold 0.1 \
-#	  --sample ./sample/ukb22828_c${i}_b0_v3_s4871*.sample \
-#	  --keep ./ukb_data_genetics_AfterQC_eid.txt \
-#	  --exclude exclrsIDs_c${i}_ambiguous.txt \
-#	  --memory 20000 \
-#	  --maf 0.005 \
-#	  --max-maf 0.49 \
-# 	--geno 0.01 \
-#	  --extract-col-cond ./QC/ukb_mfi_all_v3.tsv 9 10 \
-#	  --extract-col-cond-min 0.4 \
-#	  --write-snplist \
-#	  --make-pgen \
-#	  --out ./ukb22828_b0_v3_QC_chr${i}
+#      --hard-call-threshold 0.1 \
+#      --sample ./sample/ukb22828_c${i}_b0_v3_s4871*.sample \
+#      --keep ./ukb_data_genetics_AfterQC_eid.txt \
+#      --exclude exclrsIDs_c${i}_ambiguous.txt \
+#      --memory 20000 \
+#      --maf 0.005 \
+#      --max-maf 0.49 \
+#     --geno 0.01 \
+#      --extract-col-cond ./QC/ukb_mfi_all_v3.tsv 9 10 \
+#      --extract-col-cond-min 0.4 \
+#      --write-snplist \
+#      --make-pgen \
+#      --out ./ukb22828_b0_v3_QC_chr${i}
 # --set-all-var-ids @:#_\$r_\$a
 # --new-id-max-allele-len 500
 # --hwe 0.0000001
