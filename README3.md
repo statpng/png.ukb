@@ -473,6 +473,8 @@ library(naniar)
 }
 ```
 
+
+```
 {
   ukb_data_smoke <- png.ukb_read_regexpr("smoking|smoke", 
                                        ukb_data_dict=ukb_data_dict, 
