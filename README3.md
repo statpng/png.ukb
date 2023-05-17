@@ -294,7 +294,7 @@ ukb_icd_prevalence(ukb_data_diagnoses, icd.code="H401", icd.version = 10)
 
 #### (3) Genetics
 Genetic data의 Sample QC에서 사용되는 변수들이 포함된 데이터.
-Sample QC 이후, N=406,644이 남는 것으로 확인됨. 여기서 동의철회자 27명이 제외되면, 최종적으로 GWAS에서 사용될 샘플은 N=406,627이 됨.
+Sample QC 이후, N=406,644이 남는 것으로 확인됨. 여기서 동의철회자 43명 (중복 제외 27명)이 제외되면, 최종적으로 GWAS에서 사용될 샘플은 N=406,627이 됨.
 
 ```  
 var_genetics <- png.var.genetics()
