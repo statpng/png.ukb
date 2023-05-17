@@ -1,7 +1,5 @@
 This package combines some features from both ukbwranglr and ukbtools, and we express our gratitude to their contributions.
 
-# 모든 데이터셋은 23.04.25.에 제공된 withdrawals가 제외되었습니다.
-# length( png.sample.withdrawals() ) # [1] 43
 
 
 ## Basic Usages
@@ -212,7 +210,7 @@ ukb_data_demographics <-
                vars=var_demographics, 
                ukb_data_dict=ukb_data_dict, 
                ukb_path=ukb_path,
-               exact=FALSE)
+               exact=FALSE, exclude=png.sample.exclude())
 # exact >> TRUE: f40007_0_0; FALSE: f40007
 # [1] 502401    498
 
@@ -242,7 +240,7 @@ ukb_data_diagnoses <-
                vars=var_diagnoses, 
                ukb_data_dict=ukb_data_dict, 
                ukb_path=ukb_path,
-               exact=FALSE)
+               exact=FALSE, exclude=png.sample.exclude())
 
 ukb_data_dict_diagnoses <- 
   ukb_data_dict %>% 
@@ -311,7 +309,7 @@ ukb_data_genetics <-
                vars=var_genetics, 
                ukb_data_dict=ukb_data_dict, 
                ukb_path=ukb_path,
-               exact=FALSE)
+               exact=FALSE, exclude=png.sample.exclude())
 
 ukb_data_genetics_AfterQC <- ukb_data_genetics %>% 
   filter(is.na(sex_chromosome_aneuploidy_f22019_0_0), # != 1,
@@ -368,7 +366,13 @@ ukb_data_demographics %>%
   table()
 ```
 
+#### png.filter_visit
+N차 방문중에서 특정 차수의 변수만을 추출해주는 함수. 추가적으로 특정 인스턴스만을 추출하는 기능도 제공함.
 
+```
+ukb_data_demographics_visit0 <- png.filter_visit(ukb_data_demographics, visit=0, instance="\\d+")
+ukb_data_demographics_visit0_instance0 <- png.filter_visit(ukb_data_demographics, visit=0, instance=0)
+```
 
 ##### elucidate::describe_all
 불러온 데이터를 살펴보기 위해서는 R에서 기본으로 제공하는 또는 다른 일반적인 패키지에서 제공하는 함수를 이용할 경우 많은 시간이 소요됩니다.
@@ -424,7 +428,7 @@ library(naniar)
   ukb_data_weight <- png.ukb_read_regexpr("weight_", 
                                           ukb_data_dict=ukb_data_dict, 
                                           path_split=path_split, 
-                                          ukb_path=ukb_path)
+                                          ukb_path=ukb_path, exclude=png.sample.exclude())
   ukb_data_weight %>% png.filter_visit(0) %>% naniar::gg_miss_upset(nsets=40)
   # >> weight_f21002_0_0,  weight_f23098_0_0
 }
@@ -434,7 +438,7 @@ library(naniar)
   ukb_data_height <- png.ukb_read_regexpr("height_", 
                                           ukb_data_dict=ukb_data_dict, 
                                           path_split=path_split, 
-                                          ukb_path=ukb_path)
+                                          ukb_path=ukb_path, exclude=png.sample.exclude())
   
   ukb_data_height %>% naniar::gg_miss_upset(nsets=30)
   # >> standing_height_f50_0_0, height_f12144_2_0
@@ -444,7 +448,7 @@ library(naniar)
   ukb_data_bmi <- png.ukb_read_regexpr("_bmi_", 
                                        ukb_data_dict=ukb_data_dict, 
                                        path_split=path_split, 
-                                       ukb_path=ukb_path)
+                                       ukb_path=ukb_path, exclude=png.sample.exclude())
   
   ukb_data_bmi %>% naniar::gg_miss_upset(nsets=30)
 }
@@ -458,7 +462,7 @@ library(naniar)
   ukb_data_alcohol <- png.ukb_read_regexpr("alcohol_", 
                                        ukb_data_dict=ukb_data_dict, 
                                        path_split=path_split, 
-                                       ukb_path=ukb_path)
+                                       ukb_path=ukb_path, exclude=png.sample.exclude())
   ukb_data_alcohol %>% png.filter_visit(0) %>% naniar::gg_miss_upset(nsets=50)
   # alcohol_intake_frequency_f1558_0_0, alcohol_drinker_status_f20117_0_0
   
@@ -483,7 +487,7 @@ library(naniar)
   ukb_data_smoke <- png.ukb_read_regexpr("smoking|smoke", 
                                        ukb_data_dict=ukb_data_dict, 
                                        path_split=path_split, 
-                                       ukb_path=ukb_path)
+                                       ukb_path=ukb_path, exclude=png.sample.exclude())
   ukb_data_smoke %>% png.filter_visit(0, 0) %>% naniar::gg_miss_upset(nsets=50)
   
   ukb_data_smoke %>% elucidate::describe_na_all() %>% arrange(p_na) %>% head(10)
@@ -520,3 +524,55 @@ ukb_data_bmi %>% select(body_mass_index_bmi_f21001_0_0, body_mass_index_bmi_f231
 
 
 
+
+
+
+
+
+
+
+
+
+
+## For PLINK
+```
+var_demographics <- png.demographic_vars()
+
+ukb_data_demographics <- 
+  png.ukb_read(path=path_split, 
+               vars=var_demographics, 
+               ukb_data_dict=ukb_data_dict, 
+               ukb_path=ukb_path,
+               exact=FALSE, exclude=png.sample.exclude())
+
+ukb_data_demographics[,c("Age","Sex","AgeSex","Age2","Age2Sex"):=list(age_at_recruitment_f21022_0_0,
+                                                                      sex_f31_0_0,
+                                                                      age_at_recruitment_f21022_0_0*sex_f31_0_0,
+                                                                      age_at_recruitment_f21022_0_0^2,
+                                                                      age_at_recruitment_f21022_0_0^2*sex_f31_0_0)]
+
+
+png.write_pheno( ukb_data_demographics, 
+                 file = "ukb_data_demographics.pheno", 
+                 vars = c("Age","Sex","AgeSex","Age2","Age2Sex",
+                          "sex_f31_0_0",
+                          "year_of_birth_f34_0_0",
+                          "age_at_recruitment_f21022_0_0", 
+                          "standing_height_f50_0_0",
+                          "weight_f21002_0_0", 
+                          "body_mass_index_bmi_f21001_0_0",
+                          "body_fat_percentage_f23099_0_0",
+                          "genetic_principal_components_f22009_0_(20|[1-9]|1[0-9])$"),
+                 type = "plink")
+
+
+
+# For each GWAS conducted for each phenotype and ancestry group, we included the following covariates:
+#   
+# Age
+# Sex
+# Age * Sex
+# Age2
+# Age2 * Sex
+# The first 20 PCs
+```
