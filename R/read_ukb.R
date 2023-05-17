@@ -141,6 +141,8 @@ make_data_dict <- function(ukb_main,
     no = ukb_data_dict$Field
   )
 
+  ukb_data_dict$descriptive_colnames <- gsub('\"',"",ukb_data_dict$descriptive_colnames)
+  
   # return ukb_data_dict
   return(ukb_data_dict)
 }
