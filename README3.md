@@ -1,8 +1,12 @@
 This package combines some features from both ukbwranglr and ukbtools, and we express our gratitude to their contributions.
 
+# 모든 데이터셋은 23.04.25.에 제공된 withdrawals가 제외되었습니다.
+# length( png.sample.withdrawals() ) # [1] 43
 
 
 ## Basic Usages
+
+
 
 
 
