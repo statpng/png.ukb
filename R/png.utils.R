@@ -915,7 +915,7 @@ png.df2coding <- function(df,
 
 
 #' @export png.ukb_read
-png.ukb_read <- function(path, vars, ukb_data_dict, ukb_path, type=c("descriptive", "fid"), exact=FALSE, exclude=png.sample.withdrawals(), ...){
+png.ukb_read <- function(path, vars, ukb_data_dict, ukb_path, type=c("descriptive", "fid"), exact=FALSE, exclude=png.sample.exclude(), ...){
   # {
   #   path <- "/Volumes/png1/2.UKB/UKB_ClinicalData_descriptive"
   #   vars <- c("f.131286.0.0","f.131338.0.0","f.131350.0.0", "f.23104.0.0")
@@ -1096,7 +1096,7 @@ png.write_pheno <- function (ukb_data, file="./ukb_data.pheno", vars, exact=FALS
 
 
 #' @export png.ukb_read_regexpr
-png.ukb_read_regexpr <- function(name, ukb_data_dict, path_split, ukb_path, exclude=png.sample.withdrawals()){
+png.ukb_read_regexpr <- function(name, ukb_data_dict, path_split, ukb_path, exclude=png.sample.exclude()){
   vars_selected <- ukb_data_dict %>% 
     filter(grepl(name, descriptive_colnames)) %>% 
     # filter(grepl("f\\d+_0_\\d", descriptive_colnames) ) %>% 
