@@ -6,6 +6,11 @@ This package combines some features from both ukbwranglr and ukbtools, and we ex
 
 
 
+```
+# List of consent withdrawers (N=43) at 23.04.25.
+length( png.sample.exclude() )
+# [1] 43
+```
 
 
 ### Library
