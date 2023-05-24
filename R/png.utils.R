@@ -1125,3 +1125,43 @@ png.sample.exclude <- function(){
   out
 }
 
+
+
+
+
+#' @export png.ukb_init
+png.ukb_init <- function(path, filename, path_split){
+  
+  {
+    library(tidyverse)
+    library(png.ukb)
+    
+    # path <- "/Volumes/png1/Yonsei/3. UKB/Clinical/Maindata3/"
+    # filename <- "ukb669778"
+    # path_split <- "/Volumes/png1/2.UKB/UKB_ClinicalData_descriptive"
+    
+    ukb_main <- paste0(path, filename, ".tab", collapse="")
+    ukb_field <- get_ukb_field(filename, path)
+    ukb_dict <- get_ukb_dict()
+    ukb_coding <- get_ukb_codings()
+    ukb_data_dict <- make_data_dict(ukb_main=ukb_main, ukb_dict=ukb_dict)
+    ukb_data_dict_path <- png.dict2path(ukb_data_dict) # split Path to path1:path5
+    # New path categories with at most 2000 variables
+    ukb_path <- ukb_data_dict_path %>% select(path1:path5) %>% png.path.NestOverN(N=2000)
+  }
+  
+  
+  list(path = path, filename = filename, path_split = path_split,
+       ukb_main = ukb_main,
+       ukb_field = ukb_field,
+       ukb_dict = ukb_dict,
+       ukb_coding = ukb_coding,
+       ukb_data_dict = ukb_data_dict,
+       ukb_data_dict_path = ukb_data_dict_path,
+       ukb_path = ukb_path)
+  
+}
+
+
+
+
